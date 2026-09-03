@@ -17,6 +17,8 @@ HOME = Path.home()
 CLAUDE_JSON = HOME / ".claude.json"
 GEMINI_CONFIG_DIR = HOME / ".gemini" / "config"
 GEMINI_MCP_FILE = GEMINI_CONFIG_DIR / "mcp_config.json"
+COPILOT_DIR = HOME / ".copilot"
+COPILOT_MCP_FILE = COPILOT_DIR / "mcp-config.json"
 
 
 def load_mcp_config():
@@ -40,7 +42,7 @@ def save_mcp_config(data):
 
 
 def sync_to_clis():
-    """Synchronize central MCP servers to AGY and Claude Code."""
+    """Synchronize central MCP servers to AGY, Claude Code, and Copilot."""
     data = load_mcp_config()
     servers = data.get("mcpServers", {})
 
@@ -57,7 +59,20 @@ def sync_to_clis():
     else:
         GEMINI_MCP_FILE.symlink_to(MCP_CONFIG_FILE)
 
-    # 2. Claude Code - Update ~/.claude.json mcpServers
+    # 2. GitHub Copilot - Ensure symlink to central config
+    COPILOT_DIR.mkdir(parents=True, exist_ok=True)
+    if COPILOT_MCP_FILE.is_symlink():
+        if COPILOT_MCP_FILE.resolve() != MCP_CONFIG_FILE.resolve():
+            COPILOT_MCP_FILE.unlink()
+            COPILOT_MCP_FILE.symlink_to(MCP_CONFIG_FILE)
+    elif COPILOT_MCP_FILE.exists():
+        backup = COPILOT_MCP_FILE.with_suffix(".backup")
+        COPILOT_MCP_FILE.rename(backup)
+        COPILOT_MCP_FILE.symlink_to(MCP_CONFIG_FILE)
+    else:
+        COPILOT_MCP_FILE.symlink_to(MCP_CONFIG_FILE)
+
+    # 3. Claude Code - Update ~/.claude.json mcpServers
     if CLAUDE_JSON.exists():
         try:
             with open(CLAUDE_JSON, "r", encoding="utf-8") as f:

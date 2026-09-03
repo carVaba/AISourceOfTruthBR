@@ -122,13 +122,36 @@ class Verifier:
         self.record("Antigravity (AGY)", "mcp_config.json matches source of truth", mcp_ok, str(mcp_file))
 
     def verify_copilot(self):
-        cp_file = COPILOT_CONFIG_DIR / "copilot-instructions.md"
-        cp_ok = False
-        if cp_file.is_symlink():
-            cp_ok = cp_file.resolve() == BRAIN_FILE.resolve()
-        elif cp_file.exists():
-            cp_ok = cp_file.read_text(encoding="utf-8") == BRAIN_FILE.read_text(encoding="utf-8")
-        self.record("GitHub Copilot", "Instructions linked to AIBrain.md", cp_ok, str(cp_file))
+        copilot_dir = HOME / ".copilot"
+        rule_file = copilot_dir / "AGENTS.md"
+        rule_ok = False
+        if rule_file.is_symlink():
+            rule_ok = rule_file.resolve() == BRAIN_FILE.resolve()
+        elif rule_file.exists():
+            rule_ok = rule_file.read_text(encoding="utf-8") == BRAIN_FILE.read_text(encoding="utf-8")
+        self.record("GitHub Copilot", "AGENTS.md matches AIBrain.md", rule_ok, str(rule_file))
+
+        skills_link = copilot_dir / "skills"
+        skills_ok = False
+        if skills_link.exists():
+            if skills_link.is_symlink():
+                skills_ok = skills_link.resolve() == SKILLS_DIR.resolve()
+            else:
+                skills_ok = len([s for s in skills_link.iterdir() if s.is_dir()]) >= 10
+        self.record("GitHub Copilot", "Skills directory synced (10 skills)", skills_ok, str(skills_link))
+
+        mcp_file = copilot_dir / "mcp-config.json"
+        mcp_ok = False
+        if mcp_file.is_symlink():
+            mcp_ok = mcp_file.resolve() == MCP_CONFIG_FILE.resolve()
+        elif mcp_file.exists():
+            try:
+                with open(mcp_file, "r") as f:
+                    mdata = json.load(f)
+                    mcp_ok = len(mdata.get("mcpServers", {})) >= 3
+            except Exception:
+                mcp_ok = False
+        self.record("GitHub Copilot", "mcp-config.json matches source of truth", mcp_ok, str(mcp_file))
 
     def verify_cli_binaries(self):
         claude_installed = shutil.which("claude") is not None

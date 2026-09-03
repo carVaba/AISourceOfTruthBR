@@ -22,6 +22,7 @@ CLAUDE_DIR = HOME / ".claude"
 CLAUDE_JSON = HOME / ".claude.json"
 GEMINI_CONFIG_DIR = HOME / ".gemini" / "config"
 COPILOT_CONFIG_DIR = HOME / ".config" / "github-copilot"
+COPILOT_DIR = HOME / ".copilot"
 GITHUB_GLOBAL_DIR = HOME / ".github"
 
 
@@ -128,12 +129,13 @@ def sync_rules():
     ensure_symlink(BRAIN_FILE, GEMINI_CONFIG_DIR / "GEMINI.md")
 
     # GitHub Copilot
+    ensure_symlink(BRAIN_FILE, COPILOT_DIR / "AGENTS.md")
     ensure_symlink(BRAIN_FILE, COPILOT_CONFIG_DIR / "copilot-instructions.md")
     ensure_symlink(BRAIN_FILE, GITHUB_GLOBAL_DIR / "copilot-instructions.md")
 
 
 def sync_skills():
-    """Sync skills directory across Claude and Antigravity."""
+    """Sync skills directory across Claude, Antigravity, and Copilot."""
     print("\n==> Syncing Skills Library...")
     if not SKILLS_DIR.exists():
         print(f"  [ERROR] Skills directory not found at {SKILLS_DIR}")
@@ -145,9 +147,12 @@ def sync_skills():
     # Antigravity skills
     ensure_symlink(SKILLS_DIR, GEMINI_CONFIG_DIR / "skills")
 
+    # GitHub Copilot skills
+    ensure_symlink(SKILLS_DIR, COPILOT_DIR / "skills")
+
 
 def sync_mcp():
-    """Sync and configure MCP servers for Antigravity and Claude Code."""
+    """Sync and configure MCP servers for Antigravity, Claude Code, and Copilot."""
     print("\n==> Syncing MCP Servers...")
     if not MCP_CONFIG_FILE.exists():
         print(f"  [ERROR] MCP config not found at {MCP_CONFIG_FILE}")
@@ -158,6 +163,9 @@ def sync_mcp():
 
     # 1. Antigravity / Gemini MCP
     ensure_symlink(MCP_CONFIG_FILE, GEMINI_CONFIG_DIR / "mcp_config.json")
+
+    # 2. GitHub Copilot MCP
+    ensure_symlink(MCP_CONFIG_FILE, COPILOT_DIR / "mcp-config.json")
 
     # 2. Claude Code MCP (~/.claude.json)
     if CLAUDE_JSON.exists():

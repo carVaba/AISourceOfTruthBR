@@ -16,6 +16,7 @@ SKILLS_DIR = REPO_ROOT / "skills"
 HOME = Path.home()
 CLAUDE_SKILLS_DIR = HOME / ".claude" / "skills"
 GEMINI_SKILLS_DIR = HOME / ".gemini" / "config" / "skills"
+COPILOT_SKILLS_DIR = HOME / ".copilot" / "skills"
 
 
 def parse_skill_description(skill_path: Path) -> str:
@@ -47,12 +48,13 @@ def parse_skill_description(skill_path: Path) -> str:
 
 
 def sync_skills():
-    """Ensure symlinks for Claude Code and Antigravity point to skills directory."""
+    """Ensure symlinks for Claude Code, Antigravity, and Copilot point to skills directory."""
     SKILLS_DIR.mkdir(parents=True, exist_ok=True)
 
     targets = [
         ("Claude Code", CLAUDE_SKILLS_DIR),
         ("Antigravity (AGY)", GEMINI_SKILLS_DIR),
+        ("GitHub Copilot", COPILOT_SKILLS_DIR),
     ]
 
     for name, target in targets:

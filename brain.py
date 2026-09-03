@@ -18,11 +18,13 @@ HOME = Path.home()
 CLAUDE_RULE = HOME / ".claude" / "CLAUDE.md"
 GEMINI_RULE = HOME / ".gemini" / "config" / "GEMINI.md"
 COPILOT_RULE = HOME / ".config" / "github-copilot" / "copilot-instructions.md"
+COPILOT_AGENT_RULE = HOME / ".copilot" / "AGENTS.md"
 GITHUB_RULE = HOME / ".github" / "copilot-instructions.md"
 
 TARGETS = [
     ("Claude Code CLI", CLAUDE_RULE),
     ("Antigravity (AGY) CLI", GEMINI_RULE),
+    ("GitHub Copilot CLI (AGENTS.md)", COPILOT_AGENT_RULE),
     ("GitHub Copilot CLI (~/.config)", COPILOT_RULE),
     ("GitHub Copilot CLI (~/.github)", GITHUB_RULE),
 ]
