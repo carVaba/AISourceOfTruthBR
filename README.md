@@ -36,8 +36,37 @@ cd ~/.config/AISourceOfTruthBR
 ./manage.py <command> [arguments]
 ```
 
-### A. MCP Servers (`./manage.py mcp`)
-Any change here updates `mcp/mcp_config.json`, Antigravity, and Claude Code automatically.
+### A. Force Syncing Components (`./manage.py sync` or `./sync.py`)
+If an assistant creates or edits a skill, rule, or MCP locally, run `sync` to reconcile and propagate the changes to all assistants immediately:
+
+- **Sync Skills:**
+  ```bash
+  ./manage.py sync skill
+  ```
+  *(Detects any new or updated skill in Claude Code, AGY, or Copilot, imports it to `skills/`, and restores links).*
+
+- **Sync Memory & Rules:**
+  ```bash
+  ./manage.py sync brain
+  ```
+  *(Reconciles changes from `CLAUDE.md`, `GEMINI.md`, or `AGENTS.md` into `AIBrain.md` and restores links).*
+
+- **Sync MCP Servers:**
+  ```bash
+  ./manage.py sync mcp
+  ```
+  *(Reconciles servers added in Claude Code via `claude mcp add` into `mcp/mcp_config.json` and syncs AGY and Copilot).*
+
+- **Sync All Components:**
+  ```bash
+  ./manage.py sync all
+  ```
+  *(Syncs skills, brain, and MCP, then executes a complete parity verification).*
+
+---
+
+### B. MCP Servers (`./manage.py mcp`)
+Any change here updates `mcp/mcp_config.json`, Antigravity, Copilot, and Claude Code automatically.
 
 - **List active MCP servers:**
   ```bash

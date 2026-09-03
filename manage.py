@@ -11,6 +11,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent
 
 SCRIPTS = {
+    "sync": REPO_ROOT / "sync.py",
     "mcp": REPO_ROOT / "mcp.py",
     "skills": REPO_ROOT / "skills.py",
     "skill": REPO_ROOT / "skills.py",
@@ -29,6 +30,7 @@ Usage:
   ./manage.py <command> [subcommand] [arguments...]
 
 Available Commands:
+  sync     Force sync components: ./manage.py sync [skill|brain|mcp|all]
   mcp      Manage MCP servers (add, remove, list, sync)
   skills   Manage Skills (list, add, new, remove, sync)
   brain    Manage Memory & Global Rules (status, edit, show, add, sync)
@@ -36,12 +38,13 @@ Available Commands:
   setup    Run complete setup or sync on this machine
 
 Examples:
+  ./manage.py sync skill
+  ./manage.py sync brain
+  ./manage.py sync mcp
+  ./manage.py sync all
   ./manage.py mcp list
-  ./manage.py mcp add fetch uvx mcp-server-fetch
   ./manage.py skills list
-  ./manage.py skills new my-custom-skill
   ./manage.py brain status
-  ./manage.py brain edit
   ./manage.py verify
 """)
 
