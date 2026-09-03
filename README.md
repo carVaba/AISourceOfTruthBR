@@ -1,22 +1,45 @@
 # AISourceOfTruthBR
 
-Unified configuration source of truth for AI command-line assistants:
+Single source of truth and automated setup engine for AI CLI assistants:
 - **AGY CLI** (Google Antigravity)
 - **Claude Code CLI** (Anthropic)
 - **GitHub Copilot CLI**
+
+## Quick Start (New Mac Setup)
+
+Clone this repository and run the setup script:
+
+```bash
+git clone git@github.com:carVaba/AISourceOfTruthBR.git ~/.config/AISourceOfTruthBR
+cd ~/.config/AISourceOfTruthBR
+./setup.sh
+```
+
+The script will automatically:
+1. Verify / install `claude` (Claude Code CLI) and `agy` (Antigravity CLI).
+2. Prompt if you want to install `copilot` (GitHub Copilot CLI).
+3. Symlink `AIBrain.md` as the global instruction file for Claude, AGY, and Copilot.
+4. Symlink the unified `skills/` library (10 skills) to all assistants.
+5. Configure unified MCP servers (`glab`, `proxyman`, `XcodeBuildMCP`) for both AGY and Claude Code.
+6. Run verification to confirm parity across all tools.
+
+---
 
 ## Repository Structure
 
 ```
 AISourceOfTruthBR/
 ├── AIBrain.md          # Merged primary rule definition (Claude + Gemini + Copilot)
-├── CLAUDE.md           # Original Claude Code global instructions
-├── GEMINI.md           # Original Gemini / AGY global instructions
+├── CLAUDE.md           # Original Claude Code global instructions (reference)
+├── GEMINI.md           # Original Gemini / AGY global instructions (reference)
+├── setup.py            # Automated setup and synchronization engine
+├── setup.sh            # Lightweight shell entrypoint
+├── verify.py           # Configuration parity audit and test suite
 ├── mcp/
 │   ├── mcp_config.json        # Consolidated MCP server registry (glab, proxyman, XcodeBuildMCP)
-│   ├── claude_mcp.json        # Claude-specific MCP server definitions
-│   └── gemini_mcp_config.json # AGY / Gemini MCP server definitions
-└── skills/                    # Unified skills library
+│   ├── claude_mcp.json        # Claude-specific MCP reference
+│   └── gemini_mcp_config.json # AGY / Gemini MCP reference
+└── skills/                    # Unified skills library (10 skills)
     ├── audit-xcode-security-settings/
     ├── proxyman-download-setup/
     ├── proxyman-mcp-setup/
@@ -29,17 +52,21 @@ AISourceOfTruthBR/
     └── xcodebuildmcp-cli/
 ```
 
-## Setup & Synchronization
+---
 
-### 1. Claude Code CLI
-- Global instruction file: `~/.claude/CLAUDE.md` -> link to `AIBrain.md` or `CLAUDE.md`
-- Skills directory: `~/.claude/skills/` -> link to `skills/`
-- MCP configuration: registered in `~/.claude.json`
+## Usage Commands
 
-### 2. Antigravity / AGY CLI
-- Global instruction file: `~/.gemini/config/GEMINI.md` -> link to `AIBrain.md` or `GEMINI.md`
-- Skills directory: `~/.gemini/config/skills/` -> link to `skills/`
-- MCP configuration: `~/.gemini/config/mcp_config.json` -> link to `mcp/mcp_config.json`
+### Full Setup & Install
+```bash
+./setup.sh
+```
 
-### 3. GitHub Copilot CLI
-- Global instruction / skills shared from this repository.
+### Sync Only (Skip Tool Installation)
+```bash
+python3 setup.py --skip-tools
+```
+
+### Verify Configuration Parity
+```bash
+python3 verify.py
+```
