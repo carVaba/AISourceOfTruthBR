@@ -70,3 +70,37 @@ python3 setup.py --skip-tools
 ```bash
 python3 verify.py
 ```
+
+---
+
+## MCP Server Management
+
+Manage MCP servers centrally in `AISourceOfTruthBR`. Any change syncs immediately to all installed assistants (Antigravity and Claude Code).
+
+### Add an MCP Server
+```bash
+# Command line:
+./mcp.sh add server-name command [arg1 arg2 ...]
+
+# Example:
+./mcp.sh add fetch uvx mcp-server-fetch
+
+# Interactive mode (prompts for details):
+./mcp.sh add
+```
+
+### List Active MCP Servers
+```bash
+./mcp.sh list
+```
+
+### Remove an MCP Server
+```bash
+./mcp.sh remove server-name
+```
+
+### Force Sync All MCP Servers
+```bash
+./mcp.sh sync
+```
+

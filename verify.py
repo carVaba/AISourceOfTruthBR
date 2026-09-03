@@ -75,16 +75,17 @@ class Verifier:
 
         claude_mcp_ok = False
         mcp_detail = ""
-        if CLAUDE_JSON.exists():
+        if CLAUDE_JSON.exists() and MCP_CONFIG_FILE.exists():
             try:
+                with open(MCP_CONFIG_FILE, "r") as f:
+                    mdata = json.load(f)
                 with open(CLAUDE_JSON, "r") as f:
                     cdata = json.load(f)
-                    mcps = cdata.get("mcpServers", {})
-                    has_glab = "glab" in mcps
-                    has_proxyman = "proxyman" in mcps
-                    has_xcode = "XcodeBuildMCP" in mcps
-                    claude_mcp_ok = has_glab and has_proxyman and has_xcode
-                    mcp_detail = f"glab={has_glab}, proxyman={has_proxyman}, XcodeBuildMCP={has_xcode}"
+                expected_mcps = set(mdata.get("mcpServers", {}).keys())
+                actual_mcps = set(cdata.get("mcpServers", {}).keys())
+                missing = expected_mcps - actual_mcps
+                claude_mcp_ok = len(missing) == 0
+                mcp_detail = f"{len(expected_mcps)} active (missing: {list(missing) if missing else 'none'})"
             except Exception as e:
                 mcp_detail = str(e)
         self.record("Claude Code", "MCP servers present in ~/.claude.json", claude_mcp_ok, mcp_detail)
