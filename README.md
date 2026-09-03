@@ -12,7 +12,7 @@ Clone this repository and run the setup script:
 ```bash
 git clone git@github.com:carVaba/AISourceOfTruthBR.git ~/.config/AISourceOfTruthBR
 cd ~/.config/AISourceOfTruthBR
-./setup.sh
+./setup.py
 ```
 
 The script will automatically:
@@ -25,82 +25,58 @@ The script will automatically:
 
 ---
 
+## Unified Management CLI (`./manage.py`)
+
+You can manage MCP servers, Skills, and AI Memory/Rules from the unified `./manage.py` tool:
+
+```bash
+# MCP servers
+./manage.py mcp list
+./manage.py mcp add fetch uvx mcp-server-fetch
+./manage.py mcp remove fetch
+
+# Skills
+./manage.py skills list
+./manage.py skills new my-new-skill
+./manage.py skills add /path/to/existing/skill
+./manage.py skills remove my-old-skill
+
+# Memory & Global Rules
+./manage.py brain status
+./manage.py brain edit
+./manage.py brain add "New global instruction"
+./manage.py brain show
+
+# Verification & Parity Audit
+./manage.py verify
+```
+
+*(You can also call individual scripts directly: `./mcp.py`, `./skills.py`, `./brain.py`, `./verify.py`).*
+
+---
+
+## How Real-Time Synchronization Works
+
+- **Skills**: `~/.claude/skills` and `~/.gemini/config/skills` are symbolic links pointing directly to `~/.config/AISourceOfTruthBR/skills`. Any skill added or modified here is available immediately to both Claude and AGY without restarting or copying.
+- **Memory / Rules**: `~/.claude/CLAUDE.md`, `~/.gemini/config/GEMINI.md`, and Copilot instruction files are symbolic links pointing to `~/.config/AISourceOfTruthBR/AIBrain.md`. Any change made via `./manage.py brain edit` or `./manage.py brain add` updates all assistants immediately.
+- **MCP Servers**: Central registry is `mcp/mcp_config.json`. AGY reads it via symlink. Claude Code receives automated updates in `~/.claude.json` whenever you run `./manage.py mcp add` or `./manage.py mcp remove`.
+
+---
+
 ## Repository Structure
 
 ```
 AISourceOfTruthBR/
-├── AIBrain.md          # Merged primary rule definition (Claude + Gemini + Copilot)
-├── CLAUDE.md           # Original Claude Code global instructions (reference)
-├── GEMINI.md           # Original Gemini / AGY global instructions (reference)
-├── setup.py            # Automated setup and synchronization engine
-├── setup.sh            # Lightweight shell entrypoint
-├── verify.py           # Configuration parity audit and test suite
+├── manage.py           # Unified management CLI
+├── setup.py            # Automated bootstrap & setup engine
+├── mcp.py              # MCP server manager with auto-sync
+├── skills.py           # Skills manager with auto-sync
+├── brain.py            # AI Memory & Rules manager
+├── verify.py           # Parity test suite
+├── AIBrain.md          # Unified global rules & memory
+├── CLAUDE.md           # Original Claude rules (reference)
+├── GEMINI.md           # Original Gemini rules (reference)
 ├── mcp/
-│   ├── mcp_config.json        # Consolidated MCP server registry (glab, proxyman, XcodeBuildMCP)
-│   ├── claude_mcp.json        # Claude-specific MCP reference
-│   └── gemini_mcp_config.json # AGY / Gemini MCP reference
-└── skills/                    # Unified skills library (10 skills)
-    ├── audit-xcode-security-settings/
-    ├── proxyman-download-setup/
-    ├── proxyman-mcp-setup/
-    ├── proxyman-traffic-debugging/
-    ├── swift-api-design-guidelines-skill/
-    ├── swift-architecture-skill-v2/
-    ├── swiftui-specialist/
-    ├── tldr/
-    ├── uikit-app-modernization/
-    └── xcodebuildmcp-cli/
+│   └── mcp_config.json # Central MCP server registry
+└── skills/             # Central skills directory (10 skills)
 ```
-
----
-
-## Usage Commands
-
-### Full Setup & Install
-```bash
-./setup.sh
-```
-
-### Sync Only (Skip Tool Installation)
-```bash
-python3 setup.py --skip-tools
-```
-
-### Verify Configuration Parity
-```bash
-python3 verify.py
-```
-
----
-
-## MCP Server Management
-
-Manage MCP servers centrally in `AISourceOfTruthBR`. Any change syncs immediately to all installed assistants (Antigravity and Claude Code).
-
-### Add an MCP Server
-```bash
-# Command line:
-./mcp.sh add server-name command [arg1 arg2 ...]
-
-# Example:
-./mcp.sh add fetch uvx mcp-server-fetch
-
-# Interactive mode (prompts for details):
-./mcp.sh add
-```
-
-### List Active MCP Servers
-```bash
-./mcp.sh list
-```
-
-### Remove an MCP Server
-```bash
-./mcp.sh remove server-name
-```
-
-### Force Sync All MCP Servers
-```bash
-./mcp.sh sync
-```
-
