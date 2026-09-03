@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "glab": {
+      "command": "/opt/homebrew/bin/glab",
+      "args": [
+        "mcp",
+        "serve"
+      ]
+    }
+  }
+}

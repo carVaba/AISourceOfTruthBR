@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "proxyman": {
+      "type": "stdio",
+      "command": "/Applications/Proxyman.app/Contents/MacOS/mcp-server",
+      "args": [],
+      "env": {}
+    },
+    "XcodeBuildMCP": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "xcodebuildmcp@latest",
+        "mcp"
+      ],
+      "env": {}
+    }
+  }
+}

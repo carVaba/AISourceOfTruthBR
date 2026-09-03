@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "glab": {
+      "command": "/opt/homebrew/bin/glab",
+      "args": [
+        "mcp",
+        "serve"
+      ]
+    },
+    "proxyman": {
+      "type": "stdio",
+      "command": "/Applications/Proxyman.app/Contents/MacOS/mcp-server",
+      "args": [],
+      "env": {}
+    },
+    "XcodeBuildMCP": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "xcodebuildmcp@latest",
+        "mcp"
+      ],
+      "env": {}
+    }
+  }
+}
